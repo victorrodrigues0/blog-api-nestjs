@@ -1,8 +1,9 @@
+import { Prisma } from "generated/prisma";
 import { User } from "../entities/user.entity";
 
-export interface UserRepositoryInterface {
-    list(): Promise<User[]> | null;
-    delete(id: string): Promise<void> | null;
-    update(user: User): Promise<User> | null;
-    getById(id: string): Promise<User> | null;
+export interface UserRepository {
+    list(): Promise<User[] | undefined>;
+    delete(id: number): Promise<User | null>;
+    update(id: number, data: Prisma.usersUpdateInput): Promise<User | null>;
+    getById(id: number): Promise<User | null>;
 }

@@ -9,10 +9,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
-    .setTitle('Blog API seguindo o padrão RESTFull e clean arch')
+    .setTitle('Blog API seguindo o padrão RESTFul e clean architecture')
     .setDescription('')
     .setVersion('1.0')
-    .addTag('blog')
+    .addTag('api')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
