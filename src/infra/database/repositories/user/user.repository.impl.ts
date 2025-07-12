@@ -1,13 +1,12 @@
 import { User } from "src/domain/user/entities/user.entity";
 import { UserRepository } from "src/domain/user/repositories/user.repository";
 import { PrismaService } from "../../prisma/prisma.service";
-import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
-import { Prisma } from "generated/prisma";
+import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 
+@Injectable()
 export class UserRepositoryImpl implements UserRepository {
 
     constructor(private readonly prismaService: PrismaService) { }
-
     async list() {
         try {
             const usersData = await this.prismaService.users.findMany();
@@ -38,7 +37,8 @@ export class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException();
         }
     }
-    async update(id: number, data: Prisma.usersUpdateInput) {
+
+    async update(id: number, data: Omit<User, "id">) {
         try {
             const user = await this.prismaService.users.findUnique({ where: { id } });
 
@@ -59,6 +59,7 @@ export class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException();
         }
     }
+
     async getById(id: number) {
         try {
             const user = await this.prismaService.users.findUnique({ where: { id } });
