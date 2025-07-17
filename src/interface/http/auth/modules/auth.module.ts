@@ -5,6 +5,7 @@ import { PrismaService } from '@infra/database/prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 import { SignUpUseCase } from '@application/usecases/auth/sign-up.usecase';
 import { AuthRepositoryImpl } from '@infra/database/repositories/auth/auth.repository.impl';
+import { SignInUseCase } from '@application/usecases/auth/sign-in.usecase';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthRepositoryImpl } from '@infra/database/repositories/auth/auth.repos
   providers: [
     PrismaService,
     SignUpUseCase,
+    SignInUseCase,
     AuthRepositoryImpl
   ]
 })

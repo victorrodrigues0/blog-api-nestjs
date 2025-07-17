@@ -1,9 +1,8 @@
 import { AuthRepository } from "@domain/auth/repositories/auth.repository";
 import { PrismaService } from "@infra/database/prisma/prisma.service";
-import { UserAlredyExistException } from "@infra/exceptions/User/user-alredy-exists.exception";
 import { SignInDto } from "@interface/dtos/auth/sign-in.dto";
 import { SignUpDto } from "@interface/dtos/auth/sign-up.dto";
-import { BadRequestException, ConflictException, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
@@ -25,7 +24,6 @@ export class AuthRepositoryImpl implements AuthRepository {
             }
 
             data.password = await bcrypt.hash(data.password, 10);
-            console.log(data);
 
             const response = await this.prismaService.users.create({ data });
 
@@ -42,8 +40,8 @@ export class AuthRepositoryImpl implements AuthRepository {
             return token;
 
         } catch (error) {
-            console.log(error)
-            throw new InternalServerErrorException();
+            console.log(error);
+            throw error;
         }
     }
 
@@ -53,13 +51,20 @@ export class AuthRepositoryImpl implements AuthRepository {
             const verifyEmail = await this.prismaService.users.findUnique({ where: { email: data.email } });
 
             if (!verifyEmail) {
-                throw new ConflictException("Email alredy exists.");
+                throw new ConflictException("Email not exists.");
             }
 
+            
             const response = await this.prismaService.users.findUnique({ where: { email: data.email } });
-
+            
             if (!response) {
                 throw new BadRequestException("Error to find user in database.");
+            }
+
+            const comparePassword = await bcrypt.compare(data.password, response.password);
+
+            if(!comparePassword) {
+                throw new UnauthorizedException("Password is wrong.");
             }
 
             const token = this.jwtService.sign({
@@ -71,8 +76,8 @@ export class AuthRepositoryImpl implements AuthRepository {
             return token;
 
         } catch (error) {
-            console.log(error)
-            throw new InternalServerErrorException();
+            console.log(error);
+            throw error;
         }
     }
 }
