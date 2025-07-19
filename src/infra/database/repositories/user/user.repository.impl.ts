@@ -19,7 +19,8 @@ export class UserRepositoryImpl implements UserRepository {
 
             return users;
         } catch (error) {
-            throw new InternalServerErrorException();
+            console.log(error);
+            throw error;
         }
     }
     async delete(id: number) {
@@ -30,11 +31,10 @@ export class UserRepositoryImpl implements UserRepository {
                 throw new BadRequestException();
             }
 
-            const response = new User(deletedUser.id, deletedUser.name, deletedUser.email, deletedUser.password);
-
-            return response;
+            return;
         } catch (error) {
-            throw new InternalServerErrorException();
+            console.log(error);
+            throw error;
         }
     }
 
@@ -56,7 +56,8 @@ export class UserRepositoryImpl implements UserRepository {
 
             return response;
         } catch (error) {
-            throw new InternalServerErrorException();
+            console.log(error);
+            throw error;
         }
     }
 
@@ -72,7 +73,8 @@ export class UserRepositoryImpl implements UserRepository {
 
             return response;
         } catch (error) {
-            throw new InternalServerErrorException();
+            console.log(error);
+            throw error;
         }
     }
 }

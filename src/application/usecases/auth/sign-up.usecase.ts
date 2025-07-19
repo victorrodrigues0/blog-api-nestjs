@@ -11,13 +11,6 @@ export class SignUpUseCase implements SignUpRepository {
     ) { }
 
     async execute(data: SignUpDto) {
-        try {
-            const response = await this.authRepository.signUp(data);
-
-            return response;
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
+        return await this.authRepository.signUp(data);
     }
 }

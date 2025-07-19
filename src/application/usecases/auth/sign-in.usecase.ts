@@ -11,13 +11,6 @@ export class SignInUseCase implements SignInRepository {
     ) { }
 
     async execute(data: SignInDto): Promise<string | null> {
-        try {
-            const response = await this.authRepository.signIn(data);
-
-            return response;
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
+        return await this.authRepository.signIn(data);
     }
 }
