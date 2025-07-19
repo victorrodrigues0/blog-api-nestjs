@@ -38,7 +38,6 @@ export class UserController {
         return await this.updateUser.execute(id, data);
     }
 
-    @UseGuards(AuthGuard)
     @Get("/:id")
     @HttpCode(HttpStatus.OK)
     async getById(@Param('id', new ParseIntPipe()) id: number) {

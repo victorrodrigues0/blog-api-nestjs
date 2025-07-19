@@ -19,4 +19,13 @@ model users {
   name String
   email String @unique
   password String
+  post posts[]
+}
+
+model posts {
+  id Int @id @default(autoincrement())
+  headline String
+  content String
+  user_id Int
+  user_rel users @relation(fields: [user_id], references: [id])
 }
