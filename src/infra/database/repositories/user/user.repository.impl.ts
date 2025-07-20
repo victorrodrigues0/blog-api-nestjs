@@ -6,10 +6,10 @@ import { BadRequestException, Injectable, InternalServerErrorException } from "@
 @Injectable()
 export class UserRepositoryImpl implements UserRepository {
 
-    constructor(private readonly prismaService: PrismaService) { }
+    constructor(private readonly databaseService: PrismaService) { }
     async list() {
         try {
-            const usersData = await this.prismaService.users.findMany();
+            const usersData = await this.databaseService.users.findMany();
 
             if (!usersData) {
                 throw new BadRequestException();
@@ -25,7 +25,7 @@ export class UserRepositoryImpl implements UserRepository {
     }
     async delete(id: number) {
         try {
-            const deletedUser = await this.prismaService.users.delete({ where: { id } });
+            const deletedUser = await this.databaseService.users.delete({ where: { id } });
 
             if (!deletedUser) {
                 throw new BadRequestException();
@@ -40,13 +40,13 @@ export class UserRepositoryImpl implements UserRepository {
 
     async update(id: number, data: Omit<User, "id">) {
         try {
-            const user = await this.prismaService.users.findUnique({ where: { id } });
+            const user = await this.databaseService.users.findUnique({ where: { id } });
 
             if (!user) {
                 throw new BadRequestException();
             }
 
-            const updatedUSer = await this.prismaService.users.update({ where: { id }, data });
+            const updatedUSer = await this.databaseService.users.update({ where: { id }, data });
 
             if (!updatedUSer) {
                 throw new BadRequestException();
@@ -63,7 +63,7 @@ export class UserRepositoryImpl implements UserRepository {
 
     async getById(id: number) {
         try {
-            const user = await this.prismaService.users.findUnique({ where: { id } });
+            const user = await this.databaseService.users.findUnique({ where: { id } });
 
             if (!user) {
                 throw new BadRequestException();
