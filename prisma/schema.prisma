@@ -15,17 +15,28 @@ datasource db {
 }
 
 model users {
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
+  id       Int              @id @default(autoincrement())
+  name     String
+  email    String           @unique
   password String
-  post posts[]
+  post     posts[]
+  favorite favorite_posts[]
 }
 
 model posts {
-  id Int @id @default(autoincrement())
-  headline String
-  content String
-  user_id Int
-  user_rel users @relation(fields: [user_id], references: [id])
+  id             Int              @id @default(autoincrement())
+  headline       String
+  content        String
+  user_id        Int
+  user_rel       users            @relation(fields: [user_id], references: [id])
+  favorite_posts favorite_posts[]
+}
+
+model favorite_posts {
+  resource_id  Int
+  user_id      Int
+  resource_rel posts @relation(fields: [resource_id], references: [id])
+  user_rel     users @relation(fields: [user_id], references: [id])
+
+  @@id([resource_id, user_id])
 }
