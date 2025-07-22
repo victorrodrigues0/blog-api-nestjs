@@ -1,3 +1,3 @@
-export interface DeletePostsRepository {
-    execute(ids: number[]): Promise<void | null>
+export interface DeletePostRepository {
+    execute(id: number): Promise<void | null>
 }

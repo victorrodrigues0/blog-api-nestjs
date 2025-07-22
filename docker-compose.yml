@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16
-    container_name: meu_postgres
+    container_name: blog-nest
     restart: always
     environment:
       POSTGRES_USER: usuario

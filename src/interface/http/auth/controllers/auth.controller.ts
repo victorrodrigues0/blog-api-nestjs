@@ -13,7 +13,7 @@ export class AuthController {
     ) { }
 
     @Post("/signup")
-    @HttpCode(HttpStatus.OK)
+    @HttpCode(HttpStatus.CREATED)
     async signUp(@Body() data: SignUpDto): Promise<Object | null> {
         const token = await this.signUpUseCase.execute(data);
 

@@ -23,7 +23,7 @@ export class UserController {
     }
 
     @Delete("/delete/:id")
-    @HttpCode(HttpStatus.NO_CONTENT)
+    @HttpCode(HttpStatus.OK)
     async delete(@Param('id', new ParseIntPipe()) id: number) {
         return this.deleteUser.execute(id);
     }

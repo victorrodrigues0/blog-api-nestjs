@@ -7,6 +7,5 @@ export interface PostRepository {
     listPosts(): Promise<Post[] | null>,
     updatePost(id: number, data: UpdatePostDto): Promise<Post | null>,
     deletePost(id: number): Promise<void | null>,
-    deletePosts(ids: number[]): Promise<void | null>,
     getById(id: number): Promise<Post | null>
 }

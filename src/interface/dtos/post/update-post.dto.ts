@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNotEmpty, IsString, Length } from "class-validator";
+import { IsInt, IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
 
 export class UpdatePostDto {
     @ApiProperty({
@@ -27,5 +27,6 @@ export class UpdatePostDto {
     @IsNotEmpty()
     @IsInt()
     @Length(1)
+    @IsOptional()
     user_id: number
 }

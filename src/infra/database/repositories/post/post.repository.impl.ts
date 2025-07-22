@@ -46,13 +46,24 @@ export class PostRepositoryImpl implements PostRepository {
 
     async updatePost(id: number, data: UpdatePostDto): Promise<Post | null> {
         try {
-            const post = await this.databaseService.posts.update({ where: { id }, data });
+
+            const post = await this.databaseService.posts.findUnique({ where: { id } });
 
             if (!post) {
+                throw new BadRequestException("Post not found.");
+            }
+
+            if (post.user_id !== data.user_id) {
+                throw new BadRequestException("User is different from the creator.");
+            }
+
+            const updatedPost = await this.databaseService.posts.update({ where: { id }, data });
+
+            if (!updatedPost) {
                 throw new BadRequestException("Error to update post.");
             }
 
-            const response = new Post(post.id, post.headline, post.content, post.user_id);
+            const response = new Post(updatedPost.id, updatedPost.headline, updatedPost.content, updatedPost.user_id);
 
             return response;
         } catch (error) {
@@ -63,28 +74,17 @@ export class PostRepositoryImpl implements PostRepository {
 
     async deletePost(id: number): Promise<void | null> {
         try {
+
+            const post = await this.databaseService.posts.findUnique({ where: { id } });
+
+            if (!post) {
+                throw new BadRequestException("Post not found.");
+            }
+
             const response = await this.databaseService.posts.delete({ where: { id } });
 
             if (!response) {
                 throw new BadRequestException("Error to delete post.");
-            }
-
-            return;
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    }
-
-    async deletePosts(ids: number[]): Promise<void | null> {
-        try {
-
-            const response = ids.map(async (id, idx) => {
-                await this.databaseService.posts.delete({ where: { id } });
-            });
-
-            if (!response) {
-                throw new BadRequestException("Error to delete posts.");
             }
 
             return;
