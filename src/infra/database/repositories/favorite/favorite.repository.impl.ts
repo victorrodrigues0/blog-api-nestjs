@@ -115,10 +115,22 @@ export class FavoriteRepositoryImpl implements FavoriteRepository {
                         include: {
                             resource_rel: {
                                 include: {
-                                    user_rel: true
+                                    user_rel: {
+                                        select: {
+                                            id: true,
+                                            name: true,
+                                            email: true
+                                        }
+                                    }
                                 }
                             },
-                            user_rel: true
+                            user_rel: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true
+                                }
+                            }
                         }
                     })
 
@@ -130,7 +142,7 @@ export class FavoriteRepositoryImpl implements FavoriteRepository {
 
                     return response;
                 default:
-                    throw new BadRequestException("Resource is invalid.")
+                    throw new BadRequestException("Resource is invalid.");
             }
         } catch (error) {
             console.log(error);

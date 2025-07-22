@@ -21,6 +21,7 @@ model users {
   password String
   post     posts[]
   favorite favorite_posts[]
+  comments comments[]
 }
 
 model posts {
@@ -30,6 +31,7 @@ model posts {
   user_id        Int
   user_rel       users            @relation(fields: [user_id], references: [id])
   favorite_posts favorite_posts[]
+  comment_posts  comment_posts[]
 }
 
 model favorite_posts {
@@ -39,4 +41,21 @@ model favorite_posts {
   user_rel     users @relation(fields: [user_id], references: [id])
 
   @@id([resource_id, user_id])
+}
+
+model comments {
+  id            Int             @id @default(autoincrement())
+  content       String
+  user_id       Int
+  user_rel      users           @relation(fields: [user_id], references: [id])
+  comment_posts comment_posts[]
+}
+
+model comment_posts {
+  comment_id  Int
+  post_id     Int
+  comment_rel comments @relation(fields: [comment_id], references: [id])
+  post_rel    posts    @relation(fields: [post_id], references: [id])
+
+  @@id([comment_id, post_id])
 }

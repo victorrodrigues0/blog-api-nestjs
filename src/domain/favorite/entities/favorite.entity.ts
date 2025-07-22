@@ -1,29 +1,18 @@
+import { PostRelType } from "@domain/post/types/post_rel.type";
+import { UserRelType } from "@domain/user/types/user_rel.type";
+
 export class Favorite {
   resource: string;
-  favorited_by: {
-    id: number;
-    name: string;
-    email: string;
-  };
+  favorited_by: UserRelType;
   post: {
-    id: number;
-    headline: string;
-    content: string;
-    user_rel: {
-      id: number;
-      name: string;
-      email: string;
-    };
+    user_rel: UserRelType
   };
 
   constructor(
     resource: string,
-    favorited_by: { id: number; name: string; email: string },
+    favorited_by: UserRelType,
     post: {
-      id: number;
-      headline: string;
-      content: string;
-      user_rel: { id: number; name: string; email: string };
+      user_rel: UserRelType
     }
   ) {
     this.resource = resource;
