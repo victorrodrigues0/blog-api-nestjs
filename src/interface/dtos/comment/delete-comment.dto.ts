@@ -9,7 +9,6 @@ export class DeleteCommentDto {
     @IsString()
     resource: string
 
-
     @ApiProperty({
         description: "User rel of comment"
     })
@@ -23,7 +22,6 @@ export class DeleteCommentDto {
     @IsNotEmpty()
     @IsNumber()
     resource_id: number
-
 
     @ApiProperty({
         description: "Comment identify"

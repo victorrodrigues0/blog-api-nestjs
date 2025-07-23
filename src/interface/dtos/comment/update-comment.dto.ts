@@ -24,4 +24,11 @@ export class UpdateCommentDto {
     @IsNotEmpty()
     @IsNumber()
     comment_id: number
+
+    @ApiProperty({
+        description: "User identify"
+    })
+    @IsNotEmpty()
+    @IsNumber()
+    user_id: number
 }

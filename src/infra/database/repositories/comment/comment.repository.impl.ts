@@ -17,6 +17,17 @@ export class CommentRepositoryImpl implements CommentRepository {
         try {
             switch (data.resource) {
                 case postResource:
+
+                    const post = await this.databaseService.posts.findUnique({
+                        where: {
+                            id: data.resource_id
+                        }
+                    });
+
+                    if (!post) {
+                        throw new BadRequestException("Post not exists.");
+                    }
+
                     const comment = await this.databaseService.comments.create({
                         data: {
                             content: data.content,
@@ -64,12 +75,28 @@ export class CommentRepositoryImpl implements CommentRepository {
                         throw new BadRequestException("Error to find the comment.");
                     }
 
+                    if (data.user_id !== comment.user_id) {
+                        throw new BadRequestException("User is not the post creator.");
+                    }
+
                     const commentUpdate = await this.databaseService.comments.update({
                         where: {
                             id: data.comment_id
                         },
                         data: {
                             content: data.content
+                        },
+                        include: {
+                            comment_posts: {
+                                include: {
+                                    post_rel: true
+                                }
+                            },
+                            user_rel: {
+                                omit: {
+                                    password: true
+                                }
+                            }
                         }
                     });
 
@@ -77,7 +104,7 @@ export class CommentRepositoryImpl implements CommentRepository {
                         throw new BadRequestException("Error to update the comment in post.");
                     }
 
-                    const response = new Comment('post', commentUpdate.content, commentUpdate.user_id);
+                    const response = new Comment('post', comment.id, commentUpdate.content, commentUpdate.comment_posts, commentUpdate.user_rel);
 
                     return response;
                 default:
@@ -159,6 +186,15 @@ export class CommentRepositoryImpl implements CommentRepository {
                     const comments = await this.databaseService.comment_posts.findMany({
                         include: {
                             comment_rel: true,
+                            post_rel: {
+                                include: {
+                                    user_rel: {
+                                        omit: {
+                                            password: true
+                                        }
+                                    }
+                                }
+                            }
                         }
                     });
 
@@ -166,7 +202,7 @@ export class CommentRepositoryImpl implements CommentRepository {
                         throw new BadRequestException("Error to find the comments.");
                     }
 
-                    const response = comments.map(comment => new Comment('post', comment.comment_rel.content, comment.comment_rel.user_id));
+                    const response = comments.map(comment => new Comment('post', comment.comment_id, comment.comment_rel.content, comment.post_rel, comment.post_rel.user_rel));
 
                     return response;
                 default:
