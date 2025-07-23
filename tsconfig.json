@@ -11,10 +11,18 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@infra/*" : ["src/infra/*"],
-      "@interface/*" : ["src/interface/*"],
-      "@domain/*" : ["src/domain/*"],
-      "@application/*" : ["src/application/*"],
+      "@infra/*": [
+        "src/infra/*"
+      ],
+      "@interface/*": [
+        "src/interface/*"
+      ],
+      "@domain/*": [
+        "src/domain/*"
+      ],
+      "@application/*": [
+        "src/application/*"
+      ],
     },
     "incremental": true,
     "skipLibCheck": true,

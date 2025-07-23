@@ -3,7 +3,7 @@ import { DeletePostUseCase } from '@application/usecases/post/delete-post.usecas
 import { GetPostByIdUseCase } from '@application/usecases/post/get-post-by-id.usecase';
 import { ListPostsUseCase } from '@application/usecases/post/list-posts.usecase';
 import { UpdatePostUseCase } from '@application/usecases/post/update-post.usecase';
-import { CreatePostDto } from '@interface/dtos/post/create-post.dto';
+import { CreatePostDto } from '@infra/dtos/post/create-post.dto';
 import { UpdatePostDto } from '@interface/dtos/post/update-post.dto';
 import { AuthGuard } from '@interface/http/auth/guards/auth.guard';
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Req, UseGuards } from '@nestjs/common';
