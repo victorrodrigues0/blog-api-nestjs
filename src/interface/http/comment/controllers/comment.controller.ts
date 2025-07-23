@@ -4,7 +4,9 @@ import { ListCommentsUseCase } from '@application/usecases/comment/list-comments
 import { UpdateCommentUseCase } from '@application/usecases/comment/update-comment.usecase';
 import { AuthGuard } from '@interface/http/auth/guards/auth.guard';
 import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Comentários | comments')
 @Controller('comments')
 export class CommentController {
 
@@ -15,6 +17,11 @@ export class CommentController {
         private readonly listComments: ListCommentsUseCase
     ) { }
 
+    @ApiOperation({ summary: "Cria um comentário em um recurso do sistema." })
+    @ApiResponse({ status: 201, description: "Retorna com sucesso." })
+    @ApiResponse({ status: 400, description: "Erro com a busca no banco de dados." })
+    @ApiResponse({ status: 401, description: "Erro com o token de autorização do usuário." })
+    @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @UseGuards(AuthGuard)
     @Post('create/:resource/:resource_id')
     @HttpCode(HttpStatus.CREATED)
@@ -41,6 +48,11 @@ export class CommentController {
 
     }
 
+    @ApiOperation({ summary: "Atualiza um comentário em um recurso do sistema." })
+    @ApiResponse({ status: 200, description: "Retorna com sucesso." })
+    @ApiResponse({ status: 400, description: "Erro com a busca no banco de dados." })
+    @ApiResponse({ status: 401, description: "Erro com o token de autorização do usuário." })
+    @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @UseGuards(AuthGuard)
     @Put('update/:resource/:comment_id')
     @HttpCode(HttpStatus.OK)
@@ -67,6 +79,11 @@ export class CommentController {
 
     }
 
+    @ApiOperation({ summary: "Deleta um comentário em um recurso do sistema." })
+    @ApiResponse({ status: 200, description: "Retorna com sucesso." })
+    @ApiResponse({ status: 400, description: "Erro com a busca no banco de dados." })
+    @ApiResponse({ status: 401, description: "Erro com o token de autorização do usuário." })
+    @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @UseGuards(AuthGuard)
     @Delete('delete/:resource/:resource_id/:comment_id')
     @HttpCode(HttpStatus.OK)
@@ -88,6 +105,10 @@ export class CommentController {
         return this.deleteComment.execute(data);
     }
 
+    @ApiOperation({ summary: "Lista os comentário de um recurso do sistema." })
+    @ApiResponse({ status: 200, description: "Retorna com sucesso." })
+    @ApiResponse({ status: 400, description: "Erro com a busca no banco de dados." })
+    @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @Get('/:resource')
     @HttpCode(HttpStatus.OK)
     async list(

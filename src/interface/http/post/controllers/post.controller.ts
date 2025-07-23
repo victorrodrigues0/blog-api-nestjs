@@ -7,7 +7,9 @@ import { CreatePostDto } from '@interface/dtos/post/create-post.dto';
 import { UpdatePostDto } from '@interface/dtos/post/update-post.dto';
 import { AuthGuard } from '@interface/http/auth/guards/auth.guard';
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Postagens | posts")
 @Controller('posts')
 export class PostController {
 
@@ -19,6 +21,11 @@ export class PostController {
         private readonly listPosts: ListPostsUseCase,
     ) { }
 
+    @ApiOperation({ summary: "Cria um post no sistema." })
+    @ApiResponse({ status: 201, description: "Retorna com sucesso." })
+    @ApiResponse({ status: 400, description: "Erro com a busca no banco de dados." })
+    @ApiResponse({ status: 401, description: "Erro com o token de autorização do usuário." })
+    @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @UseGuards(AuthGuard)
     @Post("/create")
     @HttpCode(HttpStatus.CREATED)
@@ -33,12 +40,21 @@ export class PostController {
         return this.createPost.execute(data);
     }
 
+    @ApiOperation({ summary: "Lista todos os posts do sistema." })
+    @ApiResponse({ status: 200, description: "Retorna com sucesso." })
+    @ApiResponse({ status: 400, description: "Erro com a busca no banco de dados." })
+    @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @Get("/")
     @HttpCode(HttpStatus.OK)
     async list() {
         return this.listPosts.execute();
     }
 
+    @ApiOperation({ summary: "Lista todos os usuários do sistema." })
+    @ApiResponse({ status: 200, description: "Retorna com sucesso." })
+    @ApiResponse({ status: 400, description: "Erro com a busca no banco de dados." })
+    @ApiResponse({ status: 401, description: "Erro com o token de autorização do usuário." })
+    @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @UseGuards(AuthGuard)
     @Put("/update/:id")
     @HttpCode(HttpStatus.OK)
@@ -54,6 +70,11 @@ export class PostController {
     }
 
 
+    @ApiOperation({ summary: "Lista todos os usuários do sistema." })
+    @ApiResponse({ status: 200, description: "Retorna com sucesso." })
+    @ApiResponse({ status: 400, description: "Erro com a busca no banco de dados." })
+    @ApiResponse({ status: 401, description: "Erro com o token de autorização do usuário." })
+    @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @UseGuards(AuthGuard)
     @Delete("/delete/:id")
     @HttpCode(HttpStatus.OK)
@@ -61,7 +82,10 @@ export class PostController {
         return this.deletePost.execute(id);
     }
 
-    @UseGuards(AuthGuard)
+    @ApiOperation({ summary: "Lista todos os usuários do sistema." })
+    @ApiResponse({ status: 200, description: "Retorna com sucesso." })
+    @ApiResponse({ status: 400, description: "Erro com a busca no banco de dados." })
+    @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @Get("/:id")
     @HttpCode(HttpStatus.OK)
     async getById(@Param('id', new ParseIntPipe()) id: number) {

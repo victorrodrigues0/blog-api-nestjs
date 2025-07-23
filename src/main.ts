@@ -10,10 +10,10 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe());
 
     const config = new DocumentBuilder()
-      .setTitle('Blog API seguindo o padrão RESTFul e clean architecture')
-      .setDescription('')
+      .setTitle('Blog API Nestjs')
+      .setDescription('Blog API desenvolvida em NestJS, estruturada seguindo o padrão REST e os princípios da Clean Architecture. Implementa parte dos princípios SOLID e conceitos de DDD (Domain‑Driven Design), garantindo uma base escalável, organizada e de fácil manutenção.')
       .setVersion('1.0')
-      .addTag('api')
+      .addServer("http://localhost:3100/")
       .build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, documentFactory);
