@@ -4,7 +4,8 @@ import { ListUserUseCase } from '@application/usecases/user/list-user.usecase';
 import { UpdateUserUseCase } from '@application/usecases/user/update-user.usecase';
 import { UpdateUserDto } from '@interface/dtos/user/update-user.dto';
 import { AuthGuard } from '@interface/http/auth/guards/auth.guard';
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { CustomFileUserInterceptor } from '@interface/http/interceptors/user/multer/file-upload-user.interceptor';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags("Usuários | users")
@@ -47,11 +48,21 @@ export class UserController {
     @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @UseGuards(AuthGuard)
     @Put("/update/:id")
+    @UseInterceptors(CustomFileUserInterceptor('file'))
     @HttpCode(HttpStatus.OK)
     async update(
         @Param('id', new ParseIntPipe) id: number,
-        @Body() data: UpdateUserDto
+        @Body() data: UpdateUserDto,
+        @UploadedFile() file: Express.Multer.File
     ) {
+
+        if (file) {
+            data = {
+                ...data,
+                image: file.filename
+            }
+        }
+
         return await this.updateUser.execute(id, data);
     }
 

@@ -19,6 +19,7 @@ model users {
   name     String
   email    String           @unique
   password String
+  image    String           @default("public/")
   post     posts[]
   favorite favorite_posts[]
   comments comments[]
@@ -32,6 +33,14 @@ model posts {
   user_rel       users            @relation(fields: [user_id], references: [id])
   favorite_posts favorite_posts[]
   comment_posts  comment_posts[]
+  post_images    post_images[]
+}
+
+model post_images {
+  id       Int    @id @default(autoincrement())
+  image    String
+  post_id  Int
+  post_rel posts  @relation(fields: [post_id], references: [id])
 }
 
 model favorite_posts {

@@ -15,6 +15,7 @@
       "@interface/*" : ["src/interface/*"],
       "@domain/*" : ["src/domain/*"],
       "@application/*" : ["src/application/*"],
+      "@public/*" : ["public/*"],
     },
     "incremental": true,
     "skipLibCheck": true,

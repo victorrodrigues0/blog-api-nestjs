@@ -21,4 +21,9 @@ export class UpdateUserDto {
     @MinLength(6)
     @IsOptional()
     password: string
+
+    @ApiProperty({ description: "User image.", example: "JohnDoe.png" })
+    @IsString()
+    @IsOptional()
+    image: string
 }
