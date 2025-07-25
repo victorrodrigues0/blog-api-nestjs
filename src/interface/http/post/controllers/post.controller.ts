@@ -6,7 +6,8 @@ import { UpdatePostUseCase } from '@application/usecases/post/update-post.usecas
 import { CreatePostDto } from '@infra/dtos/post/create-post.dto';
 import { UpdatePostDto } from '@interface/dtos/post/update-post.dto';
 import { AuthGuard } from '@interface/http/auth/guards/auth.guard';
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { CustomFilesPostInterceptor } from '@interface/http/interceptors/post/multer/files-interceptor-post.interceptor';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags("Postagens | posts")
@@ -28,12 +29,21 @@ export class PostController {
     @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @UseGuards(AuthGuard)
     @Post("/create")
+    @UseInterceptors(CustomFilesPostInterceptor('files', 10))
     @HttpCode(HttpStatus.CREATED)
-    async create(@Body() data: CreatePostDto, @Req() req: Request) {
+    async create(
+        @Body() data: CreatePostDto,
+        @Req() req: Request,
+        @UploadedFiles() files: Express.Multer.File[]
+    ) {
+
+        const images = files.map(file => file.filename);
+
         const user = req['user'];
 
         data = {
             ...data,
+            images: images,
             user_id: user['id']
         }
 
@@ -57,12 +67,20 @@ export class PostController {
     @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @UseGuards(AuthGuard)
     @Put("/update/:id")
+    @UseInterceptors(CustomFilesPostInterceptor('files', 10))
     @HttpCode(HttpStatus.OK)
-    async update(@Param('id', new ParseIntPipe()) id: number, @Body() data: UpdatePostDto, @Req() req: Request) {
+    async update(
+        @Param('id', new ParseIntPipe()) id: number,
+        @Body() data: UpdatePostDto,
+        @Req() req: Request,
+        @UploadedFiles() files: Express.Multer.File[]) {
         const user = req['user'];
+
+        const images = files.map(file => file.filename);
 
         data = {
             ...data,
+            images,
             user_id: user['id']
         }
 

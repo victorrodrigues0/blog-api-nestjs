@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
+import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
 
 export class CreatePostDto {
     @ApiProperty({
@@ -19,6 +19,14 @@ export class CreatePostDto {
     @IsString()
     @Length(1)
     content: string
+
+    @ApiProperty({
+        description: "Post images",
+        example: ['img01.png', 'img02.png']
+    })
+    @IsOptional()
+    @IsArray()
+    images: string[]
 
     @ApiProperty({
         description: "User id Relational",

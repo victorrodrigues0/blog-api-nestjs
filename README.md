@@ -9,7 +9,7 @@
   <a href="#sobre">Sobre</a> •
   <a href="#tecnologias">Tecnologias</a> •
   <a href="#arquitetura">Arquitetura</a> •
-  <a href="#modelagem-de-dados">Modelagem de Dados</a> •
+  <a href="#upload-de-imagens">Upload de Imagens</a> •
   <a href="#instalacao">Instalação</a> •
   <a href="#executando-o-projeto">Executando o Projeto</a> •
   <a href="#documentacao-swagger">Swagger</a> •
@@ -33,7 +33,7 @@ A adoção desses conceitos contribui para um projeto mais robusto, sustentável
 
 ## Sobre
 
-API de Blog desenvolvida em **NestJS**, estruturada seguindo os princípios da **Clean Architecture** e **Domain-Driven Design (DDD)**. O projeto é modular, escalável e de fácil manutenção, com autenticação, posts, comentários e sistema de favoritos.
+API de Blog desenvolvida em **NestJS**, estruturada seguindo os princípios da **Clean Architecture** e **Domain-Driven Design (DDD)**. O projeto é modular, escalável e de fácil manutenção, com autenticação, posts, comentários, sistema de favoritos e upload de imagens.
 
 ---
 
@@ -43,6 +43,7 @@ API de Blog desenvolvida em **NestJS**, estruturada seguindo os princípios da *
 - **TypeScript**
 - **Prisma ORM** (PostgreSQL)
 - **JWT** para autenticação
+- **Multer** para upload de arquivos
 - **Swagger** para documentação automática
 - **Docker** (opcional para banco de dados)
 
@@ -54,7 +55,7 @@ O projeto segue a Clean Architecture, separando responsabilidades em camadas:
 
 - **Domain:** Entidades, repositórios e regras de negócio.
 - **Application:** Casos de uso (usecases) que orquestram as regras.
-- **Infra:** Implementações concretas (ex: Prisma).
+- **Infra:** Implementações concretas (ex: Prisma, Multer).
 - **Interface:** Controladores HTTP, DTOs e validações.
 
 ```
@@ -64,42 +65,37 @@ src/
   application/
     usecases/
   infra/
-    database/ prisma/
+    database/ prisma/ multer/
   interface/
     http/ dtos/
 ```
 
 ---
 
-## Modelagem de Dados
+## Upload de Imagens
 
-### Usuário (`users`)
-- `id` (PK)
-- `name`
-- `email` (único)
-- `password`
-- Relacionamentos: posts, favoritos, comentários
+O sistema possui funcionalidades de upload de imagens implementadas com **Multer**:
 
-### Post (`posts`)
-- `id` (PK)
-- `headline`
-- `content`
-- `user_id` (FK)
-- Relacionamentos: favoritos, comentários
+### Imagem do Usuário
+- **Endpoint:** `POST /auth/signup` e `PUT /users/update/:id`
+- **Campo:** `file` (single file)
+- **Formatos aceitos:** PNG, JPG, JPEG
+- **Localização:** `./public/uploads/user/`
+- **Configuração:** `multer.config.user.ts`
 
-### Favoritos (`favorite_posts`)
-- `resource_id` (PK, FK para posts)
-- `user_id` (PK, FK para users)
+### Múltiplas Imagens para Posts
+- **Endpoint:** `POST /posts/create` e `PUT /posts/update/:id`
+- **Campo:** `files` (multiple files)
+- **Limite:** Até 10 imagens por post
+- **Formatos aceitos:** PNG, JPG, JPEG
+- **Localização:** `./public/uploads/post/`
+- **Configuração:** `multer.config.post.ts`
 
-### Comentários (`comments`)
-- `id` (PK)
-- `content`
-- `user_id` (FK)
-- Relacionamentos: posts (via `comment_posts`)
-
-### Comentários em Posts (`comment_posts`)
-- `comment_id` (PK, FK para comments)
-- `post_id` (PK, FK para posts)
+### Características do Sistema
+- **Nomenclatura:** `nome-original-timestamp-random.extensao`
+- **Validação:** Apenas imagens são aceitas
+- **Armazenamento:** Sistema de arquivos local
+- **Relacionamento:** Imagens vinculadas às entidades via banco de dados
 
 ---
 
@@ -145,7 +141,7 @@ npm run migrate
 npm run dev
 ```
 
-A API estará disponível em: [http://localhost:3000/api](http://localhost:3000/api)
+A API estará disponível em: [http://localhost:3000/api](http://localhost:sua_porta/api)
 
 ### Produção
 
@@ -159,7 +155,7 @@ npm run start:prod
 ## Documentação Swagger
 
 Acesse a documentação interativa em:  
-[http://localhost:3000/api](http://localhost:3000/api)
+[http://localhost:3000/api](http://localhost:sua_porta/api)
 
 ---
 

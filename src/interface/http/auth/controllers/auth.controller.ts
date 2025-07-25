@@ -2,7 +2,8 @@ import { SignInUseCase } from '@application/usecases/auth/sign-in.usecase';
 import { SignUpUseCase } from '@application/usecases/auth/sign-up.usecase';
 import { SignInDto } from '@interface/dtos/auth/sign-in.dto';
 import { SignUpDto } from '@interface/dtos/auth/sign-up.dto';
-import { Body, Controller, HttpCode, HttpStatus, InternalServerErrorException, Post } from '@nestjs/common';
+import { CustomFileUserInterceptor } from '@interface/http/interceptors/user/multer/file-upload-user.interceptor';
+import { Body, Controller, HttpCode, HttpStatus, InternalServerErrorException, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags("Autenticação | auth")
@@ -20,8 +21,20 @@ export class AuthController {
     @ApiResponse({ status: 403, description: "Erro de conflito no cadastro do usuário." })
     @ApiResponse({ status: 500, description: "Erro interno no servidor." })
     @Post("/signup")
+    @UseInterceptors(CustomFileUserInterceptor('file'))
     @HttpCode(HttpStatus.CREATED)
-    async signUp(@Body() data: SignUpDto): Promise<Object | null> {
+    async signUp(
+        @Body() data: SignUpDto,
+        @UploadedFile() file: Express.Multer.File
+
+    ) {
+
+        if (file) {
+            data = {
+                ...data,
+                image: file.filename
+            }
+        }
         const token = await this.signUpUseCase.execute(data);
 
         return { token };

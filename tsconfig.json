@@ -11,6 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
+<<<<<<< HEAD
       "@infra/*": [
         "src/infra/*"
       ],
@@ -23,6 +24,13 @@
       "@application/*": [
         "src/application/*"
       ],
+=======
+      "@infra/*" : ["src/infra/*"],
+      "@interface/*" : ["src/interface/*"],
+      "@domain/*" : ["src/domain/*"],
+      "@application/*" : ["src/application/*"],
+      "@public/*" : ["public/*"],
+>>>>>>> victor-feature-adicionando-multer
     },
     "incremental": true,
     "skipLibCheck": true,
