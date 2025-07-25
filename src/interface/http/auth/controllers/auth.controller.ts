@@ -28,9 +28,12 @@ export class AuthController {
         @UploadedFile() file: Express.Multer.File
 
     ) {
-        data = {
-            ...data,
-            image: file.filename
+
+        if (file) {
+            data = {
+                ...data,
+                image: file.filename
+            }
         }
         const token = await this.signUpUseCase.execute(data);
 
